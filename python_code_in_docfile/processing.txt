@@ -36,6 +36,7 @@ def __calc_compton_fi(compton_scattering_factors, q):
     fi = fi1 + fi2 + fi3 + fi4 + fi5 + fic
     return fi
 
+
 # added Compton scattering calculation with the given q range and composition on 12/15/2023
 def compton_calc_exp(atom_indices, compton_scat_parms, compton_scattering_factors,
                      atomic_number, qmin=0.2, qmax=20, qstep=0.1, wavelength=0.1665, alpha=3):
@@ -78,7 +79,7 @@ def compton_calc_exp(atom_indices, compton_scat_parms, compton_scattering_factor
     return q_range, list_compton_scat
 # added Compton scattering calculation with the given q range and composition on 12/18/2023#################
 
-def cal_Iq(atom_indices, scattering_factors, atom_distance_matrix,
+def calculate_Iq(atom_indices, scattering_factors, atom_distance_matrix,
                  qmin=0.5, qmax=20, qstep=0.05):
     num_atom = len(atom_indices)
     num_fact = len(scattering_factors)
@@ -107,7 +108,7 @@ def cal_Iq(atom_indices, scattering_factors, atom_distance_matrix,
     return q_range, np.asarray(list_Iq)
 
 
-def cal_Sq(atom_indices, scattering_factors, atom_distance_matrix,
+def calculate_Sq(atom_indices, scattering_factors, atom_distance_matrix,
                  qmin=0.5, qmax=20, qstep=0.05, return_Iq=False):
     num_atom = len(atom_indices)
     num_fact = len(scattering_factors)
@@ -155,7 +156,7 @@ def cal_Sq(atom_indices, scattering_factors, atom_distance_matrix,
         return q_range, list_Sq
 
 
-def cal_Gr_integral(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0):
+def calculate_Gr_integral(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0):
     """
     Calculate Gr from input xyz coordinate file with integral function
     """
@@ -172,10 +173,10 @@ def cal_Gr_integral(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0):
     return list_r, list_Gr
 
 
-def cal_Gr_fft(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0,
+def calculate_Gr_fft(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0,
                      extrapolate_type="linear"):
     """
-    calculate Gr from input xyz coordinate file with inverse fast Fourier transform (IFFT) function
+    Calculate Gr from input xyz coordinate file with inverse fast Fourier transform (IFFT) function
     """
     qstep = q[1] - q[0]
     #print('q[0] = ', q[0])
@@ -210,8 +211,8 @@ def cal_Gr_fft(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0,
     gr = np.interp(r_list, rfine, gr_fine)
     return r_list, gr
 
-#cal S(q), F(q), G(r) from experimental I(q)
-def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0, qmax=25, qstep=0.1,
+#calculate S(q), F(q), G(r) from experimental I(q)
+def calculate_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0, qmax=25, qstep=0.1,
                     background_scale=1.1, poly_order=11, return_Iq=False):
     # load experimental Iq data
     exp_qiq = np.loadtxt(expqIq_data, skiprows=4)
@@ -255,7 +256,7 @@ def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0
     sq_mean_fi = np.asarray(sq_mean_fi)  # <f>^2
     list_Sq = (list_Iq - num_atom * mean_sq_fi) / (num_atom * sq_mean_fi) + 1
 
-    #cal_norm_expSq(q_range, list_Sq, poly_order = 11):
+    #calculate_norm_expSq(q_range, list_Sq, poly_order = 11):
     # generate two numpy array [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
     #                         [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]
     # poly_fit = np.zeros((2, poly_order), dtype=float) ---> commented out on Aug11, 2023
@@ -281,7 +282,7 @@ def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0
     # s: ndarray, Singular values of a
 
     # https://jyyuan.wordpress.com/2014/01/02/polynomial-interpolation-using-vandermonde-matrix-and-least-squares/
-    # vandermonde matrix works with "np.linalg.lstsq" to minimize least-square difference. August/15/2023.
+    # vandermonde matrix works with "np.linalg.lstsq" to minimize least-sqare difference. August/15/2023.
     # So aside from the downsides of interpolation and whatever, what should we be careful of here?
     # Overfitting the polynomial can make for some very poor solutions that don’t really make any sense
     # in the context of the problem at hand, so in general, doing least squares with a tall Vandermonde matrix
@@ -312,8 +313,8 @@ def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0
         return q_range, list_Iq, scaled_expIq, list_scaled_bkgIq, list_Sq, norm_list_Sq, list_Fq, mean_sq_fi, sq_mean_fi
 
 
-#cal_expGr_integral has no function of qdamp
-def cal_expGr_integral(q, list_Sq, rmin=0, rmax=100, rstep=0.02):
+#calculate_expGr_integral has no function of qdamp
+def calculate_expGr_integral(q, list_Sq, rmin=0, rmax=100, rstep=0.02):
     list_r = np.arange(rmin, rmax + rstep, rstep)
     Fq = (list_Sq - 1) * q
     qstep = q[1] - q[0]
@@ -324,7 +325,7 @@ def cal_expGr_integral(q, list_Sq, rmin=0, rmax=100, rstep=0.02):
     return list_r, list_Gr
 
 
-def cal_expGr_fft(q, Sq, rmin=0, rmax =100, rstep=0.01,
+def calculate_expGr_fft(q, Sq, rmin=0, rmax =100, rstep=0.01,
                         extrapolate_type="linear"): #"extrapolation" and "zeropad"
     qstep = q[1] - q[0]
     #print('q[0] = ', q[0])

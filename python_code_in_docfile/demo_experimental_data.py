@@ -29,15 +29,14 @@ bkgqIq_data = bkgqIq_input_base + 'A_emptyquartzcap_0p5_20240219-122602_4e50c5_p
 #Parameters
 composition = {'Co':1, 'O':1, 'P': 1}
 qmin = 0.6
-qmax = 25
+qmax = 24
 qstep = 0.01
-background_scale = 0.055
+background_scale = 0.013
 qdamp = 0
 poly_order = 11
-rpoly = np.pi*poly_order/qmax
 rmin = 0
-rmax = 15
-rstep = 0.001
+rmax = 20
+rstep = 0.01
 wavelength = 0.1665
 alpha = 3
 
@@ -75,14 +74,14 @@ atom_unique_names, atom_counts, atom_indices = losa.group_atoms(atom_names)
 
 scattering_factors = losa.get_scattering_factors(atom_unique_names, database_atom_names,
                                                 database_scat_factors)
-q, Iq, scaled_expIq, list_scaled_bkgIq, list_Sq, Sq, Fq, mean_sq_fi, sq_mean_fi = proc.cal_expSq(atom_indices,
+q, Iq, scaled_expIq, list_scaled_bkgIq, list_Sq, Sq, Fq, mean_sq_fi, sq_mean_fi = proc.calculate_expSq(atom_indices,
             scattering_factors, expqIq_data, bkgqIq_data, qmin=qmin, qmax=qmax, qstep=qstep,
             background_scale=background_scale, poly_order=11, return_Iq=False)
 
 #load test results in xPDFsuite with the same data plotted here.
-test_xpdfsuite_qsq = np.loadtxt("C:/Users/gkwon/PycharmProjects/ezpit/dev/Test_qmax_file/Chi_1file/A_CoPiITOglass_02142024_1-test_20240219-154304_696917_primary-dk_sub_image-0.sq", skiprows=26)
-test_xpdfsuite_qfq = np.loadtxt("C:/Users/gkwon/PycharmProjects/ezpit/dev/Test_qmax_file/Chi_1file/A_CoPiITOglass_02142024_1-test_20240219-154304_696917_primary-dk_sub_image-0.fq", skiprows=26)
-test_xpdfsuite_rgr = np.loadtxt("C:/Users/gkwon/PycharmProjects/ezpit/dev/Test_qmax_file/Chi_1file/A_CoPiITOglass_02142024_1-test_20240219-154304_696917_primary-dk_sub_image-0.gr", skiprows=26)
+test_xpdfsuite_qsq = np.loadtxt("C:/Users/gkwon/Pycharmprojects/ezpit/data/sum_A_CoPiITO_110320-1_Nsum5-Nohdeader.sq", skiprows=26)
+test_xpdfsuite_qfq = np.loadtxt("C:/Users/gkwon/Pycharmprojects/ezpit/data/sum_A_CoPiITO_110320-1_Nsum5-NOheader.fq", skiprows=26)
+test_xpdfsuite_rgr = np.loadtxt("C:/Users/gkwon/Pycharmprojects/ezpit/data/sum_A_CoPiITO_110320-1_Nsum5-Noheader.gr", skiprows=26)
 
 np.savetxt(input_base + 'square_mean_fi.chi', np.column_stack(([list_q, sq_mean_fi]))) # or use "list(zip(r, Gr)))"
 np.savetxt(input_base + 'mean_square_fi.chi', np.column_stack(([list_q, mean_sq_fi]))) # or use "list(zip(r, Gr)))"
@@ -117,7 +116,6 @@ plt.legend()
 
 plt.figure(2)
 plt.plot(q, list_Sq, label='not normalized S(q)')
-plt.plot(q, 3*Sq, label='polynomial corrected S(q)')
 plt.plot(xpdfsuite_q, xpdfsuite_sq, label='xpdfsuite_S(q)')
 plt.xlabel('q (1/A)')
 plt.ylabel('S(q)')
@@ -125,8 +123,7 @@ plt.grid()
 plt.legend()
 
 plt.figure(3)
-plt.plot(q, 3*Sq, label='S(q)')
-#plt.legend(f"rpoly =  {rpoly}")
+plt.plot(q, Sq, label='S(q)')
 plt.plot(xpdfsuite_q, xpdfsuite_sq, label='xpdfsuite_S(q)')
 plt.xlabel('q (1/A)')
 plt.ylabel('S(q)')
@@ -134,7 +131,7 @@ plt.grid()
 plt.legend()
 
 plt.figure(4)
-plt.plot(q, 3*Fq, label='F(q)')
+plt.plot(q, Fq, label='F(q)')
 plt.plot(xpdfsuite_q, xpdfsuite_fq, label='xpdfsuite_F(q)')
 plt.xlabel('q (1/A)')
 plt.ylabel('F(q)')
@@ -143,7 +140,7 @@ plt.legend()
 
 
 plt.figure(5)
-plt.plot(q, Iq/12, label='bkg subtracted Iq')
+plt.plot(q, Iq/12, label='bkg sbutracted Iq')
 plt.plot(q, mean_sq_fi, label='<f^2>')
 plt.plot(q, sq_mean_fi, label='<f>^2')
 plt.xlabel('q (1/A)')
@@ -152,14 +149,13 @@ plt.grid()
 plt.legend()
 
 #get G(r) data from integral and IFFT methods
-r1, Gr1 = proc.cal_expGr_integral(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep)
-r2, Gr2 = proc.cal_expGr_fft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, extrapolate_type="linear")
+r1, Gr1 = proc.calculate_expGr_integral(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep)
+r2, Gr2 = proc.calculate_expGr_fft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, extrapolate_type="linear")
 
 plt.figure(6)
-plt.plot(r1, 3.7*Gr1, label='integral')
-plt.plot(r2, 3.6*Gr2, label='ifft')
+plt.plot(r1, Gr1, label='integral-G(r)')
+plt.plot(r2, Gr2, label='ifft-G(r)')
 plt.plot(xpdfsuite_r, xpdfsuite_gr, label='xpdfsuite_G(r)' )
-plt.plot([], [], label= f'rpoly = {rpoly:.3f}')
 plt.xlabel('r (A)')
 plt.ylabel('G(r)')
 plt.grid()

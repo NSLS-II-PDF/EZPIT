@@ -32,7 +32,7 @@ database_scat_factors = losa.load_scattering_factors(aff_parm_file)
 # print(len(database_atom_names))
 # print(database_scat_factors.shape)
 
-qmin = 0.0
+qmin = 0.5
 qmax = 30
 qstep = 0.001
 rmin = 0
@@ -48,7 +48,7 @@ atom_unique_names, atom_counts, atom_indices = losa.group_atoms(atom_names)
 scattering_factors = losa.get_scattering_factors(atom_unique_names, database_atom_names,
                                                 database_scat_factors)
 
-q, Iq, Sq, Fq, mean_sq_fi, sq_mean_fi = proc.cal_Sq(atom_indices, scattering_factors, atom_distance_matrix,
+q, Iq, Sq, Fq, mean_sq_fi, sq_mean_fi = proc.calculate_Sq(atom_indices, scattering_factors, atom_distance_matrix,
                                     qmin=qmin, qmax=qmax, qstep=qstep, return_Iq=True)
 
 # print(qIq.shape)
@@ -78,7 +78,7 @@ plt.grid()
 plt.legend()
 
 t0 = timeit.default_timer()
-r, Gr = proc.cal_Gr_integral(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp)
+r, Gr = proc.calculate_Gr_integral(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp)
 np.savetxt(input_base + '5IrC_r5a-1Ir_integral_qmin0p5.gr', np.column_stack(([r, Gr])))   # or use "list(zip(r, Gr)))"
 
 t1 = timeit.default_timer()
@@ -92,7 +92,7 @@ plt.ylabel('G(r)')
 plt.legend()
 
 t0 = timeit.default_timer()
-r, Gr2 = proc.cal_Gr_fft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp,
+r, Gr2 = proc.calculate_Gr_fft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp,
                               extrapolate_type="linear")
 np.savetxt(input_base + '5IrC_r5a-1Ir_ifft_qmin0p5.gr', np.column_stack(([r, Gr2])))   # or use "list(zip(r, Gr)))"
 
