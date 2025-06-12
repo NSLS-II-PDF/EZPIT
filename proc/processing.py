@@ -172,7 +172,7 @@ def cal_Gr_integral(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0):
     return list_r, list_Gr
 
 
-def cal_Gr_fft(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0,
+def cal_Gr_ifft(q, Sq, rmin=0, rmax=100, rstep=0.02, qdamp=0.0,
                      extrapolate_type="linear"):
     """
     calculate Gr from input xyz coordinate file with inverse fast Fourier transform (IFFT) function
@@ -269,7 +269,7 @@ def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0
 
     qscaled_by_qmax_for_sq = q_range / qmax_for_sq  # qscaled_by_qmax_for_sq is numpy array
     matrix_vandermonde = np.vander(qscaled_by_qmax_for_sq, poly_order + 1)
-    # remove 1 (the last element =a0) in vandermonde matrix:
+    # remove 1 (the last element =a0, created by vandermonde matrix itself) in vandermonde matrix:
     # 4.04E-17 1.25E-15 3.86E-14 1.19E-12 3.70E-11 1.14E-09 3.53E-08 1.09E-06 3.38E-05 1.05E-03 3.23E-02
     remove_a0_matrix_vandermonde = matrix_vandermonde[:, :-1]
     # remove_a0_matrix_vandermonde = matrix_vandermonde

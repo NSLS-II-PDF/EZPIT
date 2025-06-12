@@ -1,10 +1,3 @@
-'''
-import matplotlib.pyplot as plt
-import losa.loadersaver as losa
-import proc.processing as proc
-import timeit
-'''
-
 import matplotlib.pyplot as plt
 import losa.loadersaver as losa
 import proc.processing as proc
@@ -92,7 +85,7 @@ plt.ylabel('G(r)')
 plt.legend()
 
 t0 = timeit.default_timer()
-r, Gr2 = proc.cal_Gr_fft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp,
+r, Gr2 = proc.cal_Gr_ifft(q, Sq, rmin=rmin, rmax=rmax, rstep=rstep, qdamp=qdamp,
                               extrapolate_type="linear")
 np.savetxt(input_base + '5IrC_r5a-1Ir_ifft_qmin0p5.gr', np.column_stack(([r, Gr2])))   # or use "list(zip(r, Gr)))"
 
