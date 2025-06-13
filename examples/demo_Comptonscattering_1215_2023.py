@@ -36,7 +36,7 @@ print('atom_indices = ',atom_indices)
 compton_scat_form_factor, atomic_number = losa.get_compton_scattering_factors(atom_unique_names,
                                                                     compton_atom_names,compton_scat_parms) #[1]
 
-list_q, list_compton_scat = proc.compton_calc_exp(atom_indices, compton_scat_parms, compton_scat_form_factor,
+list_q, list_compton_scat = proc.compton_cal_exp(atom_indices, compton_scat_parms, compton_scat_form_factor,
                             atomic_number, qmin=qmin, qmax=qmax, qstep=qstep, wavelength=wavelength, alpha=alpha)    #proc.compton_calc_exp(XXXX)
 
 np.savetxt(input_base + 'list_compton_scat.chi', np.column_stack(([list_q, list_compton_scat]))) # or use "list(zip(r, Gr)))"

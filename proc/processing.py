@@ -8,7 +8,7 @@ def create_atom_distance_matrix(atom_positions):
     return distance_matrix
 
 
-def __calc_fi(scat_values, q):
+def __cal_fi(scat_values, q):
     """
     Calculate scattering form factor
     """
@@ -22,7 +22,7 @@ def __calc_fi(scat_values, q):
     return fi
 
 # added Compton scattering form factor calculation with the given q range and composition on 12/18/2023#############
-def __calc_compton_fi(compton_scattering_factors, q):
+def __cal_compton_fi(compton_scattering_factors, q):
     """
     calculate Compton scattering form factor
     """
@@ -37,7 +37,7 @@ def __calc_compton_fi(compton_scattering_factors, q):
     return fi
 
 # added Compton scattering calculation with the given q range and composition on 12/15/2023
-def compton_calc_exp(atom_indices, compton_scat_parms, compton_scattering_factors,
+def compton_cal_exp(atom_indices, compton_scat_parms, compton_scattering_factors,
                      atomic_number, qmin=0.2, qmax=20, qstep=0.1, wavelength=0.1665, alpha=3):
     #parameters for Breit-Dirac recoil factor
     me = 9.109534e-31
@@ -60,7 +60,7 @@ def compton_calc_exp(atom_indices, compton_scat_parms, compton_scattering_factor
         list_fi = []
         for k in range(num_fact):
             #print('k = ', k)
-            list_fi.append(__calc_compton_fi(compton_scat_parms[atomic_number[k]-1], q))
+            list_fi.append(__cal_compton_fi(compton_scat_parms[atomic_number[k]-1], q))
             #print('list_fi = ', list_fi)
         list_fi = np.asarray(list_fi)
         #print('list_fi = np.asarray(list_fi) = ', list_fi)
@@ -91,7 +91,7 @@ def cal_Iq(atom_indices, scattering_factors, atom_distance_matrix,
         fi_mat = np.zeros((num_atom, num_atom))
         list_fi = []
         for k in range(num_fact):
-            list_fi.append(__calc_fi(scattering_factors[k], q))
+            list_fi.append(__cal_fi(scattering_factors[k], q))
         list_fi = np.asarray(list_fi)
         for i, idx in enumerate(atom_indices):
             fi = list_fi[idx]
@@ -125,7 +125,7 @@ def cal_Sq(atom_indices, scattering_factors, atom_distance_matrix,
         fi_mat = np.zeros((num_atom, num_atom))
         list_fi = []
         for k in range(num_fact):
-            list_fi.append(__calc_fi(scattering_factors[k], q))
+            list_fi.append(__cal_fi(scattering_factors[k], q))
         list_fi = np.asarray(list_fi)
         fi_sum, fi2_sum = 0.0, 0.0
         for i, idx in enumerate(atom_indices):
@@ -240,7 +240,7 @@ def cal_expSq(atom_indices, scattering_factors, expqIq_data, bkgqIq_data, qmin=0
         fi_mat = np.zeros((num_atom, num_atom))
         list_fi = []
         for k in range(num_fact):
-            list_fi.append(__calc_fi(scattering_factors[k], q))
+            list_fi.append(__cal_fi(scattering_factors[k], q))
         list_fi = np.asarray(list_fi)
         fi_sum, fi2_sum = 0.0, 0.0
         for i, idx in enumerate(atom_indices):
