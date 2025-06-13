@@ -47,6 +47,7 @@ q, Iq, Sq, Fq, mean_sq_fi, sq_mean_fi = proc.cal_Sq(atom_indices, scattering_fac
 # print(qIq.shape)
 plt.figure(0)
 plt.plot(q, Iq, label='I(q)')
+np.savetxt(input_base + '5IrC_r5a-1Ir_integral_qmin0p5.iq', np.column_stack(([q, Iq])))
 #plt.plot(q, sq_mean_fi, label='sq_mean_fi')
 #plt.plot(q, mean_sq_fi, label='mean_sq_fi')
 plt.xlabel('q (1/A)')

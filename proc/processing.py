@@ -104,7 +104,7 @@ def cal_Iq(atom_indices, scattering_factors, atom_distance_matrix,
         sin_mat[diag_idx] = 1.0
         Iq = fi_mat * np.transpose(fi_mat) * sin_mat
         list_Iq.append(np.sum(Iq))
-    return q_range, np.asarray(list_Iq)
+    return q_range, list_Iq    #np.asarray(list_Iq) 6/13/2025
 
 
 def cal_Sq(atom_indices, scattering_factors, atom_distance_matrix,
